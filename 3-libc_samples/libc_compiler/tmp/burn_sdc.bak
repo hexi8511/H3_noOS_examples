@@ -1,0 +1,21 @@
+#!/bin/bash
+
+dev_list=$(find /dev/|grep -E '^\/dev\/sd[c-d]$')
+
+#echo $dev_list
+
+#for dev_node in $list
+#do 
+#	echo $dev_node
+#done
+#exit
+if [ -e  $dev_list  ];then
+	echo "find device node!"
+	echo $dev_list
+	sudo dd if=./boot0/boot0.bin of=$dev_list bs=1024 seek=8 conv=fsync
+	sudo dd if=boot2.bin of=$dev_list bs=1024 seek=64 conv=fsync
+else
+	echo "Can not find $dev_list device node"
+fi
+
+

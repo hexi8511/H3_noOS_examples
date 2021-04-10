@@ -1,0 +1,20 @@
+objs := div64.o lib1funcs.o ctype.o muldi3.o printf.o string.o vsprintf.o
+INC_TOP=$(shell pwd)
+
+INCLUDEDIR 	:=-I$(INC_TOP)/libc
+
+CPPFLAGS   	= -nostdinc $(INCLUDEDIR)
+
+libc.a: $(objs)
+	arm-linux-gcc $(CPPFLAGS) -Wall -O2 -fno-builtin -c -o div64.o div64.S
+	arm-linux-gcc $(CPPFLAGS)  -Wall -O2 -fno-builtin -c -o lib1funcs.o lib1funcs.S
+	arm-linux-gcc $(CPPFLAGS)  -Wall -O2 -fno-builtin -c -o ctype.o ctype.c
+	arm-linux-gcc $(CPPFLAGS)  -Wall -O2 -fno-builtin -c -o muldi3.o muldi3.c
+	arm-linux-gcc $(CPPFLAGS)  -Wall -O2 -fno-builtin -c -o printf.o printf.c
+	arm-linux-gcc $(CPPFLAGS)  -Wall -O2 -fno-builtin -c -o string.o string.c
+	arm-linux-gcc $(CPPFLAGS)  -Wall -O2 -fno-builtin -c -o vsprintf.o vsprintf.c
+
+
+clean:
+	rm -f libc.a *.o		
+	

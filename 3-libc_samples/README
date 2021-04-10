@@ -1,0 +1,6 @@
+本实例有两个，分别是selfcode和compiler
+1）selfcode是自己实现的一套类c库，功能有限，
+	ARM内部BOM直接引导执行selfcode在内部RAM中
+2）compiler是利用编译器自带的c库，功能完整
+	Boot0.bin将SD卡中的数据加载到DDR中0x4a000000地址中，
+compiler生成的演示代码，之后在DDR中执行，并调用C库中的一些接口，进行演示。

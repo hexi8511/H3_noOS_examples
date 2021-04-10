@@ -1,0 +1,68 @@
+#!/bin/bash
+
+
+
+function no_used_main()
+{
+dev_list=$(find /dev/|grep -E '^\/dev\/sd[c-d]$')
+
+#echo $dev_list
+
+#for dev_node in $list
+#do 
+#	echo $dev_node
+#done
+#exit
+if [ -e  $dev_list  ];then
+	echo "find device node!"
+	echo $dev_list
+        echo "Please burn $dev_list y/n?"
+	read cmd_yn
+	if [ $cmd_yn == "y" ];then
+		sudo dd if=boot.bin of=$dev_list bs=1024 seek=8 conv=fsync
+	else
+		echo "cancel burn firmware to $dev_list"
+	fi
+else
+	echo "Can not find $dev_list device node"
+fi
+}
+
+
+function isRemoveDisk()
+{
+   udiskdev_index=$(ls "/proc/scsi/usb-storage/")
+  # echo "isRemoveDisk()"
+	
+   for udi in $udiskdev_index
+   do
+       dev_list=$(ls /sys/class/scsi_device/$udi\:0\:0\:0/device/block|grep -E '^*sd[b-d]$')
+       echo "$dev_list"
+       udev_node=$(cat /sys/class/scsi_device/$udi\:0\:0\:0/device/block/sdb/dev)
+       udev_removable=$(cat /sys/class/scsi_device/$udi\:0\:0\:0/device/block/sdb/removable)
+       if [ "$udev_removable" == "1" ];then
+		echo "$udev_node is Udisk"
+       else 
+    		echo "$udev_node not udisk"
+       fi
+   done
+}
+
+res=$(isRemoveDisk)
+
+echo "Find "$res
+res2=$(echo $res|grep -E '^*is Udisk')
+echo $res2
+
+if [ ! "$res2" == "" ];then
+	dev_list=$(echo $res2|awk '{print $1}')
+
+	echo "Please makesure to burn $dev_list y/n?"
+	read cmd_yn
+	if [ $cmd_yn == "y" ];then
+              # echo $dev_list
+	       sudo dd if=boot.bin of=/dev/$dev_list bs=1024 seek=8 conv=fsync
+	else
+		echo "cancel burn firmware to $dev_list"
+	fi
+fi

@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ -e /dev/sdc ];then
+	echo "find device node!"
+	sudo dd if=boot.bin of=/dev/sdc bs=1024 seek=8 conv=fsync
+else
+	echo "Can not find /dev/sdc device node"
+fi
+
+
