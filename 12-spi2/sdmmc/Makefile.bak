@@ -1,0 +1,20 @@
+OBJS :=mmc_bsp.o  mmc.o mmc_op.o load_boot1_from_sdmmc.o
+INC_TOP	=$(shell pwd)	
+INCLUDEDIR 	:= -I./\
+				-I../include\
+				-I../lib/libc
+
+CPPFLAGS   	= -nostdinc $(INCLUDEDIR)
+
+libmmc.a: $(OBJS)
+	${AR} -r -o $@ $^
+	
+%.o:%.c
+	${CC} $(CPPFLAGS) $(CFLAGS) -c -o  $@ $<
+
+%.o:%.S
+	${CC} $(CPPFLAGS) $(CFLAGS) -c -o  $@ $<
+
+clean:
+	rm -f libmmc.a *.o		
+	

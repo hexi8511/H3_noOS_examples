@@ -1,0 +1,138 @@
+RKSDK_TOP_DIR:=/home/helei/work/H3/lichee/brandy
+TOOLCHAIN_DIR:=$(RKSDK_TOP_DIR)/gcc-linaro/bin
+CROSS_COMPILE=arm-none-eabi-
+#$(TOOLCHAIN_DIR)/arm-linux-gnueabi-
+
+CC      = $(CROSS_COMPILE)gcc
+LD      = $(CROSS_COMPILE)ld
+AR      = $(CROSS_COMPILE)ar
+OBJCOPY = $(CROSS_COMPILE)objcopy
+BJDUMP = $(CROSS_COMPILE)objdump
+
+
+
+
+
+INCLUDE:=include
+
+#OBJS:= start.o \
+#			uart.o\
+#			delay.o\
+#			ccu.o\
+#			led.o\
+#			dram_sun8i_h3.o\
+#			mmu/libmmu.a\
+#			sdmmc/libmmc.a\
+#			dma.o\
+#			main.o\
+#			intc.o\
+#			cp15_v.o\
+#			dump_mem.o\
+#			dump_cpu_regs.o\
+#			lib/libc.a\
+#			cpu/libint.a\
+#			pll_data/libpll_data.a
+
+OBJS:= start.o \
+			uart.o\
+			delay.o\
+			nano_lib.o\
+			ccu.o\
+			led.o\
+			dram_sun8i_h3.o\
+			sdmmc/libmmc.a\
+			main.o\
+			pll_data/libpll_data.a
+
+OBJS2:= start2.o \
+			uart.o\
+			cache_v7.o\
+			dma.o\
+			spi.o\
+			delay.o\
+			mmu/libmmu.a\
+			cp15_v.o\
+			ccu.o\
+			timer.o\
+			led2.o\
+			intc.o\
+			rader.o\
+			rtc.o\
+			power.o\
+			dram_sun8i_h3.o\
+			sdmmc/libmmc.a\
+			main2.o\
+			cpu/libint.a\
+			dump_mem.o\
+			dump_cpu_regs.o\
+			pll_data/libpll_data.a\
+			wdog.o\
+			spi_lcd/spi_lcd_ssd1306.o\
+			spi_lcd/family3.o
+		#	spi_lcd/family4.o\
+		#	spi_lcd/family5.o\
+		#		spi_lcd/family.o\
+		#	spi_lcd/family2.o\
+			
+			
+				
+#CFLAGS:= -c  -marm -mcpu=cortex-a7  -  -O0 -g -Wall -nostdlib -marm -fno-builtin  -Wa,-mimplicit-it=thumb
+# 
+#LKFLAGS:= -o  -nostartfiles  -mcpu=cortex-a7 
+LIBS:=  -Llib  -lc# -lgcc#  -lgcc_pic -lgcc_eh -lgcov
+#-L/home/helei/work/A31s/linux/lichee/buildroot/output/external-toolchain/lib/gcc/arm-linux-gnueabi/4.6.3
+
+INC_TOP=$(shell pwd)
+#-fno-stack-protector -Wa,-mimplicit-it=thumb
+INCLUDEDIR 	:= -Iinclude -Ilib/libc
+CFLAGS 		:= -Wall -O2 -fno-builtin -nostdlib  -march=armv7-a -mtune=cortex-a7  
+CPPFLAGS   	:= -nostdinc  $(INCLUDEDIR)
+
+export SDKROOT	CC AR LD OBJCOPY OBJDUMP INCLUDEDIR CFLAGS CPPFLAGS 
+
+.PHONY :  all 
+
+all:boot.bin lib/libc.a boot2.bin
+	echo $(INC_TOP)
+boot.bin:$(OBJS)
+	@echo $(OBJS)
+	${LD} -Tboot.lds -o boot.elf $^ $(LIBS)
+	${OBJCOPY} -O binary -S boot.elf $@
+#	${OBJDUMP} -D boot.elf > boot.dis
+	./tool/mksunxiboot boot.bin boot.bin
+boot2.bin:$(OBJS2)
+	@echo $(OBJS2)
+	${LD} -Tboot2.lds -o boot2.elf $^ $(LIBS)
+	${OBJCOPY} -O binary -S boot2.elf boot2.bin
+
+%.o:%.c
+	${CC} $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+%.o:%.S
+	${CC} $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+lib/libc.a:
+	make -C lib
+#libm/libm.a:
+#	make -C libm
+cpu/libint.a:
+	make -C cpu
+
+pll_data/libpll_data.a:
+	make -C pll_data
+
+mmu/libmmu.a:
+	make -C mmu
+
+sdmmc/libmmc.a:
+	make -C sdmmc
+
+clean:
+	rm -f  *.elf *.dis *.o *~ boot.bin boot2.bin spi_lcd/*.o
+	make -C cpu clean
+	make -C lib clean
+#	make -C libm clean
+	make -C pll_data clean
+	make -C mmu clean
+	make -C sdmmc clean
+
