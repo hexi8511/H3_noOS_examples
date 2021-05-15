@@ -48,9 +48,35 @@ int _write (int file,
     SerialPortWrite((uint8_t *)buf, nbytes);
     return nbytes;
 } /* _write () */
-int _exit(int file) { return -1; }
+//int _exit(int file) { return -1; }
 int _read(int file) { return -1; }
 int _close(int file) { return -1; }
 int _fstat(int file) { return -1; }
 int _isatty(int file) { return 1; }
 int _lseek(int file, int ptr, int dir) { return 0; }
+
+void _exit(int code)
+{
+    while(1);
+}
+
+int _getpid_r(struct _reent *ptr)
+{
+    return 0;
+}
+int _kill_r(struct _reent *ptr, int pid, int sig)
+{
+    /* return "not supported" */
+    ptr->_errno = ENOTSUP;
+    return -1;
+}
+
+#if 0
+int _DEFUN (kill, (pid, sig),int pid _AND int sig)
+{
+    if(pid == __MYPID)
+        _exit(sig);
+
+    return 0;
+}
+#endif
