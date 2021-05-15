@@ -380,7 +380,7 @@ u16 disp_data[320*240]={0,};
 
 void lcd_init()
 {
-
+printf("%s\n",__func__);
 u8 val[32]={0,};
 #if 1
         val[0]=(0x39); 
@@ -508,17 +508,13 @@ val[0]=(0x02);
  			spi_lcd_write_reg(0x29,0,0);
 
  			spi_lcd_write_reg(0x2c,0,0);
-
+printf("%s 1\n",__func__);
 	
 }
 
-extern void lcd_ctrl_gpio_init();
-
 void spi_init_test()
 {
-
-	lcd_ctrl_gpio_init();
-	u8 val[32]={0,};
+u8 val[32]={0,};
 
 	spi_lcd_write_reg(SPI_LCD_DISP_INVERSION_ON,0,0);
 
@@ -704,7 +700,7 @@ void dump_reg(u8 addr)
 		printf("\n");
 }
 
-
+extern void lcd_ctrl_gpio_init();
 
 /*
 *
@@ -713,6 +709,7 @@ void dump_reg(u8 addr)
 void spi_lcd_test()
 {
 	u32 last_tick2=sys_get_tick();
+	lcd_ctrl_gpio_init();
 
 	spi_lcd_init_master(0);
 	
@@ -727,13 +724,14 @@ void spi_lcd_test()
 	u8 transmit_one_flag=0;
 	int i,j=0;
 	
-	printf("reg tbl size=%d\n",spi_lcd_get_reg_tbl_size());
+	printf("reg tbl 2 size=%d\n",spi_lcd_get_reg_tbl_size());
 	
-	dump_reg(0x09);
-	dump_reg(0x0a);
-	dump_reg(0x0b);
-	dump_reg(0x0c);
+	// dump_reg(0x09);
+	// dump_reg(0x0a);
+	// dump_reg(0x0b);
+	// dump_reg(0x0c);
 	lcd_init();
+	printf("%s start lcd\n",__func__);
 	spi_lcd_start();
 	//spi_lcd_read_gram();
 	//dump_reg(0x09);

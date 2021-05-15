@@ -683,19 +683,13 @@ Write_Command(0xAF); // Set Display On
 
 delay_ms(1000);
 update_fb();
-
-printf("update lcd pci\n");
 update_gram(&disp_fb[0][0]);
 delay_ms(1000);
-
-printf("update lcd pic and show image\n");
 OLED_DrawBMP(0,0,128,32,BMP1);
 delay_ms(1000);
 
 OLED_Clear();
 delay_ms(1000);
-
-printf("update lcd string\n");
 OLED_ShowString(0,0,"Hello oled");
 
 
@@ -1023,7 +1017,7 @@ void dump_reg(u8 addr)
 		printf("\n");
 }
 
-extern void lcd_ctrl_gpio_init();
+
 
 /*
 *
@@ -1033,8 +1027,6 @@ void spi_lcd_test()
 {
 	u32 last_tick2=sys_get_tick();
 
-	lcd_ctrl_gpio_init();
-
 	spi_lcd_init_master(0);
 	
 	//PA9 RST, PA8 CD/
@@ -1042,8 +1034,8 @@ void spi_lcd_test()
 	delay_ms(50);
 	p9_high();
 
-	//open blacklight
-	p7_high();
+//open blacklight
+//p7_high();
 	
 	u8 transmit_one_flag=0;
 	int i,j=0;
@@ -1054,11 +1046,11 @@ void spi_lcd_test()
 	//dump_reg(0x0a);
 	//dump_reg(0x0b);
 	//dump_reg(0x0c);
-	lcd_init();
+	//lcd_init();
 
 	Init_ssd1306_IC();
-	spi_lcd_start();
-	spi_lcd_read_gram();
+	//spi_lcd_start();
+	//spi_lcd_read_gram();
 	//dump_reg(0x09);
 	//dump_reg(0x0a);
 	//dump_reg(0x0b);
@@ -1066,12 +1058,12 @@ void spi_lcd_test()
 	//dump_reg(0x52);
 	//dump_reg(0x54);
 	//dump_reg(0x56);	
-	spi_lcd_fill(10,10,100,100,((0x22<<11)|(56<<5)));
-	spi_init_test();
+	//spi_lcd_fill(10,10,100,100,((0x22<<11)|(56<<5)));
+	//spi_init_test();
 
 	
 	//spi_lcd_draw_line(100,100,50,200,(0x3f<<5));
-#if 1
+#if 0
 	while(1)
 	{
 		if((sys_get_tick()-last_tick2)>500)

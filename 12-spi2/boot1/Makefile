@@ -19,7 +19,7 @@ TARGET=boot1.bin
 # 
 #LKFLAGS:= -o  -nostartfiles  -mcpu=cortex-a7 
 #LIBS:=-L$(BUILD) $(BUILD)/libc.a $(BUILD)/libint.a $(BUILD)/libpll_data.a
-LIBS:=-L$(BUILD)  -llcd -lbsp -lc -lcpu -lmmc -lpll_data
+LIBS:=-L$(BUILD) -lcpu  -llcd -lbsp -lc -lmmc -lpll_data
 #-lpll_data
 #-L/home/helei/work/A31s/linux/lichee/buildroot/output/external-toolchain/lib/gcc/arm-linux-gnueabi/4.6.3  # -lgcc -lgcc_pic -lgcc_eh -lgcov
 

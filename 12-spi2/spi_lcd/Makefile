@@ -1,4 +1,4 @@
-SRCS:=	spi_lcd_ssd1306.c\
+SRCS:=	spi_lcd.c\
 	family3.c\
 	spi_gpio.c
 

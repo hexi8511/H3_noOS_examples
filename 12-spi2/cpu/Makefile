@@ -1,13 +1,16 @@
-SRCS:=	arm_start.S\
-	int.S\
-	intc.c\
-	cache.S\
-	cp15_v.c\
-	mmu_asm.S\
-	dump_cpu_regs.S\
-	mmu.c
 
-OBJS =$(patsubst %.S, $(BUILD)/%.o, $(SRCS))  
+SRCS:=\
+	arm_start.S\
+	cache.S\
+	intc.c\
+	int.S\
+	cp15_v.c\
+	mmu.c\
+	mmu_asm.S\
+	dump_cpu_regs.S
+
+
+OBJS :=$(patsubst %.S, $(BUILD)/%.o, $(SRCS)) 
 OBJS :=$(patsubst %.c,$(BUILD)/%.o, $(OBJS)) 
 
 TARGET:=libcpu.a
